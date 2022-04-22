@@ -128,9 +128,10 @@ def run_query(url, name, notify):
         except:
             price = "Unknown price"
         link = product.parent.parent.parent.parent.get('href') 
-
-        location = product.find('span',re.compile(r'town')).string + product.find('span',re.compile(r'city')).string
-
+        try:
+            location = product.find('span',re.compile(r'town')).string + product.find('span',re.compile(r'city')).string
+        except:
+            print("noo")
 
         if not queries.get(name):   # insert the new search
             queries[name] = {url: {link: {'title': title, 'price': price, 'location': location}}}
@@ -138,9 +139,29 @@ def run_query(url, name, notify):
             print("Adding result:", title, "-", price, "-", location)
         else:   # add search results to dictionary
             if not queries.get(name).get(url).get(link):   # found a new element
-                tmp = "New element found for "+name+": "+title+" @ "+price+" - "+location+" --> "+link+'\n'
-                msg.append(tmp)
-                queries[name][url][link] = {'title': title, 'price': price, 'location': location}
+                price = price[:-1]
+                print(price)
+                try:
+                    if int(price)<60:
+                        print("fuziona")
+                        tmp = "New element found for "+name+": "+title+" @ "+price+" - "+location+" --> "+link+'\n'
+                        msg.append(tmp)
+                        print(tmp)
+                        queries[name][url][link] = {'title': title, 'price': price, 'location': location}
+
+                except:
+                    print("non funziona")
+                    tmp = "New element found for "+name+": "+title+" @ "+price+" - "+location+" --> "+link+'\n'
+                    msg.append(tmp)
+                    print(tmp)
+                    queries[name][url][link] = {'title': title, 'price': price, 'location': location}
+
+                if 51<50:
+                    print("1")
+                    tmp = "New element found for "+name+": "+title+" @ "+price+" - "+location+" --> "+link+'\n'
+                    msg.append(tmp)
+                    print(tmp)
+                    queries[name][url][link] = {'title': title, 'price': price, 'location': location}
 
     if len(msg) > 0:
         if notify:
